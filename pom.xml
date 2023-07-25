@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>be.royteeuwen.jcr</groupId>
+    <artifactId>jcrvlt-713-example</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>content-package</packaging>
+
+    <name>JCRVLT-713 Example</name>
+    <description>Example project</description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.jackrabbit</groupId>
+                <artifactId>filevault-package-maven-plugin</artifactId>
+                <version>1.3.4</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <filterSource>${project.basedir}/src/main/content/META-INF/vault/filter.xml</filterSource>
+                    <!-- Use the target directory because the source does not have the final CSS files -->
+                    <jcrRootSourceDirectory>${project.build.directory}/vault-work/jcr_root</jcrRootSourceDirectory>
+
+                    <!-- Setting this to false will "solve" the issue -->
+                    <failOnDuplicateEntries>true</failOnDuplicateEntries>
+                </configuration>
+            </plugin>
+            <!-- Generate CSS files from the SCSS -->
+            <plugin>
+                <groupId>io.github.cleydyr</groupId>
+                <artifactId>dart-sass-maven-plugin</artifactId>
+                <version>1.1.0</version>
+                <executions>
+                    <execution>
+                        <id>generate-css-using-sass</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>compile-sass</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <inputFolder>${project.basedir}/src/main/content/jcr_root</inputFolder>
+                    <outputFolder>${project.build.directory}/vault-work/jcr_root</outputFolder>
+                </configuration>
+            </plugin>
+            <!-- Copy all other files -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-content-resources</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/vault-work</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/src/main/content</directory>
+                                    <filtering>false</filtering>
+                                    <excludes>
+                                        <exclude>**/.svn</exclude>
+                                        <exclude>**/.vlt</exclude>
+                                        <exclude>**/.vltignore</exclude>
+                                        <exclude>**/.DS_Store</exclude>
+                                        <exclude>jcr_root/libs/**</exclude>
+                                    </excludes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <developers>
+        <developer>
+            <name>Roy Teeuwen</name>
+            <email>roy@orbinson.be</email>
+            <id>royteeuwen</id>
+        </developer>
+    </developers>
+
+
+</project>
