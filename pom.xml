@@ -21,7 +21,7 @@
                 <configuration>
                     <filterSource>${project.basedir}/src/main/content/META-INF/vault/filter.xml</filterSource>
                     <!-- Use the target directory because the source does not have the final CSS files -->
-                    <jcrRootSourceDirectory>${project.build.directory}/vault-work/jcr_root</jcrRootSourceDirectory>
+                    <jcrRootSourceDirectory>${project.build.directory}/preprocessed/jcr_root</jcrRootSourceDirectory>
 
                     <!-- Setting this to false will "solve" the issue -->
                     <failOnDuplicateEntries>true</failOnDuplicateEntries>
@@ -43,7 +43,7 @@
                 </executions>
                 <configuration>
                     <inputFolder>${project.basedir}/src/main/content/jcr_root</inputFolder>
-                    <outputFolder>${project.build.directory}/vault-work/jcr_root</outputFolder>
+                    <outputFolder>${project.build.directory}/preprocessed/jcr_root</outputFolder>
                 </configuration>
             </plugin>
             <!-- Copy all other files -->
@@ -59,7 +59,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/vault-work</outputDirectory>
+                            <outputDirectory>${project.build.directory}/preprocessed</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${basedir}/src/main/content</directory>
